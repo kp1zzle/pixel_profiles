@@ -11,7 +11,7 @@ const COLORS = [
     [255,52,203],
     [76,17,48]
 ]
-const NUM_LINES = 60
+const NUM_LINES = 100
 let checkeredBg = false
 let img
 
@@ -29,12 +29,17 @@ let sketch = (s) => {
         s.background('#000000');
         if (checkeredBg){
             // // Checkered background
-            s.background('#9899CC');
+            // s.background('#9899CC');
             let pxWidth = 10
             s.noStroke()
             s.fill('#8384b6')
             for (let i = 0; i < CANVAS_WIDTH/pxWidth; i++) {
                 for (let j = 0; j < CANVAS_WIDTH/pxWidth; j++) {
+                    s.fill(s.lerpColor(
+                        s.color('#fd9200'),
+                        s.color('#bc43ff'),
+                        i/(CANVAS_WIDTH/pxWidth),
+                    ))
                     if ((i%2 === 0 && j%2 !== 0) || (i%2 !== 0 && j%2 === 0)) {
                         s.rect(i * pxWidth, j*pxWidth, pxWidth, pxWidth)
                     }
@@ -69,29 +74,30 @@ let sketch = (s) => {
         s.push()
         s.translate(x, y)
         // s.image(img, 70, 60, 210 140)
-
-        s.noFill()
-        s.translate(70, 0)
+        let pg = s.createGraphics(w, h)
+        pg.noFill()
+        pg.translate(61, 0)
         for (let i = 0; i < NUM_LINES; i++) {
             // s.stroke(COLORS[i % 5])
-            s.stroke(s.lerpColor(
+            pg.stroke(s.lerpColor(
                 s.color('#fd9200'),
                 s.color('#bc43ff'),
                 i/NUM_LINES,
             ))
-            s.strokeWeight(0.5 **s.sin(0.2*i + 4) + 0.3)
-            s.beginShape();
-            s.vertex(0,i)
-            s.vertex(0,i)
-            s.curveVertex(3+i,0.3*h)
-            s.curveVertex(2-(NUM_LINES - i),0.6*h)
+            pg.strokeWeight(0.5 **s.sin(0.2*i + 4) + 0.3)
+            pg.beginShape();
+            pg.vertex(0,0)
+            pg.vertex(0,0)
+            pg.curveVertex(3+0.1*i,0.3*h)
+            pg.curveVertex(40-(NUM_LINES - i),0.6*h)
             // curveVertex(-5*i,500-i)
             // curveVertex(100-2*i,1000-i)
-            s.vertex(0,h - (NUM_LINES - i)*0.2)
-            s.vertex(0,h - (NUM_LINES - i)*0.2)
-            s.endShape();
-            s.translate(2, 0)
+            pg.vertex(0,h)
+            pg.vertex(0,h)
+            pg.endShape();
+            pg.translate(1.5, 0)
         }
+        s.image(pg, 0, 0,)
 
         s.pop()
     }
