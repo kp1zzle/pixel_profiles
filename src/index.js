@@ -11,8 +11,8 @@ const COLORS = [
     [255,52,203],
     [76,17,48]
 ]
-const NUM_LINES = 20
-
+const NUM_LINES = 60
+let checkeredBg = false
 let img
 
 let sketch = (s) => {
@@ -25,21 +25,23 @@ let sketch = (s) => {
     }
 
     s.draw = () => {
-        s.noLoop()
-        // s.background('#0040e0');
-
-        // Checkered background
-        s.background('#9899CC');
-        let pxWidth = 10
-        s.noStroke()
-        s.fill('#8384b6')
-        for (let i = 0; i < CANVAS_WIDTH/pxWidth; i++) {
-            for (let j = 0; j < CANVAS_WIDTH/pxWidth; j++) {
-                if ((i%2 === 0 && j%2 !== 0) || (i%2 !== 0 && j%2 === 0)) {
-                    s.rect(i * pxWidth, j*pxWidth, pxWidth, pxWidth)
+        // s.noLoop()
+        s.background('#000000');
+        if (checkeredBg){
+            // // Checkered background
+            s.background('#9899CC');
+            let pxWidth = 10
+            s.noStroke()
+            s.fill('#8384b6')
+            for (let i = 0; i < CANVAS_WIDTH/pxWidth; i++) {
+                for (let j = 0; j < CANVAS_WIDTH/pxWidth; j++) {
+                    if ((i%2 === 0 && j%2 !== 0) || (i%2 !== 0 && j%2 === 0)) {
+                        s.rect(i * pxWidth, j*pxWidth, pxWidth, pxWidth)
+                    }
                 }
             }
         }
+
 
         s.drawScreen(125, 125)
         s.drawComputer(100, 125+260+1, 400, 90)
@@ -69,21 +71,26 @@ let sketch = (s) => {
         // s.image(img, 70, 60, 210 140)
 
         s.noFill()
-        s.translate(30, 0)
+        s.translate(70, 0)
         for (let i = 0; i < NUM_LINES; i++) {
-            s.stroke(COLORS[i % 5])
+            // s.stroke(COLORS[i % 5])
+            s.stroke(s.lerpColor(
+                s.color('#fd9200'),
+                s.color('#bc43ff'),
+                i/NUM_LINES,
+            ))
             s.strokeWeight(0.5 **s.sin(0.2*i + 4) + 0.3)
             s.beginShape();
-            s.vertex(0,i*4)
-            s.vertex(0,i*4)
+            s.vertex(0,i)
+            s.vertex(0,i)
             s.curveVertex(3+i,0.3*h)
             s.curveVertex(2-(NUM_LINES - i),0.6*h)
             // curveVertex(-5*i,500-i)
             // curveVertex(100-2*i,1000-i)
-            s.vertex(0,h - (NUM_LINES - i)*4)
-            s.vertex(0,h - (NUM_LINES - i)*4)
+            s.vertex(0,h - (NUM_LINES - i)*0.2)
+            s.vertex(0,h - (NUM_LINES - i)*0.2)
             s.endShape();
-            s.translate(10, 0)
+            s.translate(2, 0)
         }
 
         s.pop()
@@ -121,16 +128,19 @@ let sketch = (s) => {
         if (s.key === 's') {
             s.export()
         }
+        if (s.key === 'b') {
+            checkeredBg = !checkeredBg
+        }
     }
 
     s.export = () => {
         let filename = (new Date).toISOString()
         s.save(filename.concat(".png"))
-        s.createCanvas(CANVAS_WIDTH, CANVAS_WIDTH, s.SVG)
-        s.draw()
-        s.save(filename.concat(".svg"))
-        s.createCanvas(CANVAS_WIDTH, CANVAS_WIDTH)
-        s.draw()
+        // s.createCanvas(CANVAS_WIDTH, CANVAS_WIDTH, s.SVG)
+        // s.draw()
+        // s.save(filename.concat(".svg"))
+        // s.createCanvas(CANVAS_WIDTH, CANVAS_WIDTH)
+        // s.draw()
     }
 }
 
